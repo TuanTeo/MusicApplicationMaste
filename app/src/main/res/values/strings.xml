@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Music</string>
-    <string name="seach_item_title">Seach</string>
+    <string name="seach_item_title">Search</string>
     <string name="name_current_song_label">Darkside</string>
     <string name="singer_name_current_song_label">Alan Walker</string>
     <string name="time_song_textview">3:37</string>
@@ -20,4 +20,6 @@
     <string name="favorite_navifation_title">Favorite</string>
     <string name="listen_now_navigation_title">Listen Now</string>
     <string name="music_library_navigation_title">Music Library</string>
+    <string name="read_storage_detail_dialog_message">App nghe nhac can quyen doc ghi the nho de hien thi danh sach bai hat</string>
+    <string name="ok_negative">OK</string>
 </resources>

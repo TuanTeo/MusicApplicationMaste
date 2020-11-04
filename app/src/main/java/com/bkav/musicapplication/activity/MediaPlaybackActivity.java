@@ -5,10 +5,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.bkav.musicapplication.R;
+import com.bkav.musicapplication.fragment.MediaPlaybackFragment;
 import com.bkav.musicapplication.service.MediaPlaybackService;
 
 public class MediaPlaybackActivity extends AppCompatActivity {
@@ -31,7 +32,7 @@ public class MediaPlaybackActivity extends AppCompatActivity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            //Bkav Thanhnch: sao khong xu ly gi?
+            mIsBindService = false;
         }
     };
 
@@ -50,6 +51,7 @@ public class MediaPlaybackActivity extends AppCompatActivity {
     }
 
     /**
+     * Tuantqd
      * Bind to Service
      */
     public void bindMediaService() {
@@ -68,6 +70,10 @@ public class MediaPlaybackActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Tuantqd
+     * Function to show media playback fragment
+     */
     private void showMediaPlaybackFragment() {
         MediaPlaybackFragment mediaPlaybackFragment = new MediaPlaybackFragment();
         getSupportFragmentManager().beginTransaction()
@@ -76,6 +82,11 @@ public class MediaPlaybackActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Tuantqd
+     * Function to get mediaService object
+     * @return
+     */
     public MediaPlaybackService getmMediaService() {
         return mMediaService;
     }

@@ -33,7 +33,8 @@ public class FavoriteSongAdapter extends RecyclerView.Adapter<FavoriteSongAdapte
     private LayoutInflater mInflater;
     private MainActivity mainActivity;
 
-    private int mLastItemPositionInt = Constant.MEDIA_DEFAULT_POSITION;  //Vi tri cua phan tu khi clicked
+    private int mLastItemPositionInt = Constant.MEDIA_DEFAULT_POSITION;     //Vi tri cua phan tu khi clicked
+    private String mCurretSongPath = Constant.MEDIA_DEFAULT_TITLE;           //Path cua phan tu khi clicked
 
     public FavoriteSongAdapter(ArrayList<Song> mListSongAdapter, MainActivity context) {
         this.mainActivity = context;
@@ -51,14 +52,14 @@ public class FavoriteSongAdapter extends RecyclerView.Adapter<FavoriteSongAdapte
     @Override
     public void onBindViewHolder(@NonNull FavoriteSongViewHolder holder, int position) {
         if(mainActivity.getmMediaService() != null){
-            mLastItemPositionInt = mainActivity.getmMediaService().getmCurrentMediaID();
+            mCurretSongPath = mainActivity.getmMediaService().getmCurrentMediaTitle();
             //Set Name song
             holder.mSongNameItemTextView.setText(mListFavoriteSongAdapter.get(position).getmTitle());
             holder.mTotalTimeSongItemTextView.setText(mListFavoriteSongAdapter.get(position).getmDurationString());
 
             //Set font
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (mListFavoriteSongAdapter.get(position).getmID() == mLastItemPositionInt) {
+                if (mListFavoriteSongAdapter.get(position).getmTitle().equals(mCurretSongPath)) {
                     holder.mSongNameItemTextView.setTextAppearance(R.style.SongTheme_NameSongClickOverLay);
                 } else {
                     holder.mSongNameItemTextView.setTextAppearance(R.style.SongTheme_NameSongOverLay);
@@ -66,7 +67,7 @@ public class FavoriteSongAdapter extends RecyclerView.Adapter<FavoriteSongAdapte
             }
 
             //Set Serial
-            if (mListFavoriteSongAdapter.get(position).getmID() == mLastItemPositionInt) {
+            if (mListFavoriteSongAdapter.get(position).getmTitle().equals(mCurretSongPath)) {
                 holder.mSerialSongNumberTextView.setVisibility(View.INVISIBLE);
                 holder.mPlayingSongImageLinearLayout.setVisibility(View.VISIBLE);
             } else {
@@ -81,7 +82,7 @@ public class FavoriteSongAdapter extends RecyclerView.Adapter<FavoriteSongAdapte
 
             //Set font
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (position == mLastItemPositionInt) {
+                if (mListFavoriteSongAdapter.get(position).getmTitle().equals(mCurretSongPath)) {
                     holder.mSongNameItemTextView.setTextAppearance(R.style.SongTheme_NameSongClickOverLay);
                 } else {
                     holder.mSongNameItemTextView.setTextAppearance(R.style.SongTheme_NameSongOverLay);
@@ -89,7 +90,7 @@ public class FavoriteSongAdapter extends RecyclerView.Adapter<FavoriteSongAdapte
             }
 
             //Set Serial
-            if (position == mLastItemPositionInt) {
+            if (mListFavoriteSongAdapter.get(position).getmTitle().equals(mCurretSongPath)) {
                 holder.mSerialSongNumberTextView.setVisibility(View.INVISIBLE);
                 holder.mPlayingSongImageLinearLayout.setVisibility(View.VISIBLE);
             } else {
@@ -115,6 +116,7 @@ public class FavoriteSongAdapter extends RecyclerView.Adapter<FavoriteSongAdapte
         private LinearLayout mPlayingSongImageLinearLayout;
 
         /**
+         * Tuantqd
          * Constructor of Song View Holder
          *
          * @param itemView
@@ -134,13 +136,11 @@ public class FavoriteSongAdapter extends RecyclerView.Adapter<FavoriteSongAdapte
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
-                            //Bkav Thanhnch: thay case 1 cai
-                            switch (item.getItemId()) {
-                                case R.id.remove_favorite_song_item:
-                                    deleteSongFromDataBase(position);
-                                    notifyItemRemoved(position);
-                                    notifyDataSetChanged();
-                                    return true;
+                            if(item.getItemId() == R.id.remove_favorite_song_item){
+                                deleteSongFromDataBase(position);
+                                notifyItemRemoved(position);
+                                notifyDataSetChanged();
+                                return true;
                             }
                             return false;
                         }
@@ -156,28 +156,6 @@ public class FavoriteSongAdapter extends RecyclerView.Adapter<FavoriteSongAdapte
         public void onClick(View v) {
             //Get position of item
             mLastItemPositionInt = getAdapterPosition();
-
-//            mSongDetailItemImageButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    PopupMenu popupMenu = new PopupMenu(mainActivity.getApplicationContext(), v);
-//                    popupMenu.inflate(R.menu.menu_favorite_song_item);
-//                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                        @Override
-//                        public boolean onMenuItemClick(MenuItem item) {
-//                            if(mListFavoriteSongAdapter.get(mLastItemPositionInt).isFavoriteSong()){
-//
-//                            }
-//                            switch (item.getItemId()) {
-//                                case R.id.remove_favorite_song_item:
-//                                    deleteSongFromDataBase(mLastItemPositionInt);
-//                            }
-//                            return false;
-//                        }
-//                    });
-//                    popupMenu.show();
-//                }
-//            });
 
             //Theo chieu doc => Show small playing area
             if (v.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
@@ -208,39 +186,46 @@ public class FavoriteSongAdapter extends RecyclerView.Adapter<FavoriteSongAdapte
             }
         }
 
+//        /**
+//         * Tuantqd
+//         * Get Song data put to ContentValues
+//         * @param position
+//         * @return
+//         */
+//        private ContentValues getSongData(int position){
+//            ContentValues contentValues = new ContentValues();
+//
+//            contentValues.put(DataBase.COLUMN_PATH, mListFavoriteSongAdapter.get(position).getmPath());
+//            contentValues.put(DataBase.COLUMN_TITLE, mListFavoriteSongAdapter.get(position).getmTitle());
+//            contentValues.put(DataBase.COLUMN_TRACK, mListFavoriteSongAdapter.get(position).getmTrackNumber());
+//            contentValues.put(DataBase.COLUMN_YEAR, mListFavoriteSongAdapter.get(position).getmYear());
+//            contentValues.put(DataBase.COLUMN_ALBUM, mListFavoriteSongAdapter.get(position).getmAlbumName());
+//            contentValues.put(DataBase.COLUMN_ALBUM_ID, mListFavoriteSongAdapter.get(position).getmAlbumID());
+//            contentValues.put(DataBase.COLUMN_ARTIST, mListFavoriteSongAdapter.get(position).getmArtistName());
+//            contentValues.put(DataBase.COLUMN_ARTIST_ID, mListFavoriteSongAdapter.get(position).getmArtistId());
+//            contentValues.put(DataBase.COLUMN_DURATION, mListFavoriteSongAdapter.get(position).getmDuration());
+//
+//            return contentValues;
+//        }
+
+//        /**
+//         * Tuantqd
+//         * Add Song To DataBase
+//         * @param position
+//         */
+//        private void addSongToDataBase(int position){
+//            ContentValues values = getSongData(position);
+//            Uri uri = mainActivity.getContentResolver().insert(
+//                    FavoriteSongProvider.CONTENT_URI, values);
+//            Toast.makeText(mainActivity.getBaseContext(),
+//                    uri.toString(), Toast.LENGTH_LONG).show();
+//        }
+
         /**
-         * Get Song data put to ContentValues
-         * @param position
-         * @return
-         */
-        private ContentValues getSongData(int position){
-            ContentValues contentValues = new ContentValues();
-
-            contentValues.put(DataBase.COLUMN_PATH, mListFavoriteSongAdapter.get(position).getmPath());
-            contentValues.put(DataBase.COLUMN_TITLE, mListFavoriteSongAdapter.get(position).getmTitle());
-            contentValues.put(DataBase.COLUMN_TRACK, mListFavoriteSongAdapter.get(position).getmTrackNumber());
-            contentValues.put(DataBase.COLUMN_YEAR, mListFavoriteSongAdapter.get(position).getmYear());
-            contentValues.put(DataBase.COLUMN_ALBUM, mListFavoriteSongAdapter.get(position).getmAlbumName());
-            contentValues.put(DataBase.COLUMN_ALBUM_ID, mListFavoriteSongAdapter.get(position).getmAlbumID());
-            contentValues.put(DataBase.COLUMN_ARTIST, mListFavoriteSongAdapter.get(position).getmArtistName());
-            contentValues.put(DataBase.COLUMN_ARTIST_ID, mListFavoriteSongAdapter.get(position).getmArtistId());
-            contentValues.put(DataBase.COLUMN_DURATION, mListFavoriteSongAdapter.get(position).getmDuration());
-
-            return contentValues;
-        }
-
-        /**
-         * Add Song To DataBase
+         * Tuantqd
+         * Delete Song from database
          * @param position
          */
-        private void addSongToDataBase(int position){
-            ContentValues values = getSongData(position);
-            Uri uri = mainActivity.getContentResolver().insert(
-                    FavoriteSongProvider.CONTENT_URI, values);
-            Toast.makeText(mainActivity.getBaseContext(),
-                    uri.toString(), Toast.LENGTH_LONG).show();
-        }
-
         private void deleteSongFromDataBase(int position){
             mainActivity.getContentResolver()
                     .delete(FavoriteSongProvider.CONTENT_URI

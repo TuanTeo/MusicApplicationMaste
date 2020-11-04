@@ -11,7 +11,8 @@ import com.bkav.musicapplication.object.Song;
 import java.util.ArrayList;
 
 /**
- * Chua tat ca bai hat
+ * Tuantqd
+ * Cung cap tat ca bai hat co trong memory
  */
 public class SongProvider {
 
@@ -59,6 +60,7 @@ public class SongProvider {
     };
 
     /**
+     * Tuantqd
      * Get all song from Memory
      * @param cursor
      * @return
@@ -80,6 +82,7 @@ public class SongProvider {
     }
 
     /**
+     * Tuantqd
      * Get all Song's name from cursor (memory)
      * @param cursor
      * @return
@@ -99,27 +102,29 @@ public class SongProvider {
     }
 
     /**
+     * Tuantqd
      * Read data for each Song
      * @param cursor
      * @return
      */
     private static Song getSongFromCursorImpl(Cursor cursor) {
-        final String title = cursor.getString(TITLE);
-        final int trackNumber = cursor.getInt(TRACK);
-        final int year = cursor.getInt(YEAR);
-        final int duration = cursor.getInt(DURATION);
-        final String uri = cursor.getString(PATH);
-        final String albumName = cursor.getString(ALBUM);
-        final int artistId = cursor.getInt(ARTIST_ID);
-        final String artistName = cursor.getString(ARTIST);
-        final String albumID = cursor.getString(ALBUM_ID);
-        final int _id = cursor.getInt(_ID);
+        String title = cursor.getString(TITLE);
+        int trackNumber = cursor.getInt(TRACK);
+        int year = cursor.getInt(YEAR);
+        int duration = cursor.getInt(DURATION);
+        String uri = cursor.getString(PATH);
+        String albumName = cursor.getString(ALBUM);
+        int artistId = cursor.getInt(ARTIST_ID);
+        String artistName = cursor.getString(ARTIST);
+        String albumID = cursor.getString(ALBUM_ID);
+        int id = cursor.getInt(_ID);
 
         return new Song(title, trackNumber, year, duration, uri, albumName,
-                artistId, artistName, albumID, _id);
+                artistId, artistName, albumID, id);
     }
 
     /**
+     * Tuantqd
      * Create Cursor to read data from Memory
      * @return
      * @param context

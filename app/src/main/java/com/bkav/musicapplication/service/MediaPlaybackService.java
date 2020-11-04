@@ -16,13 +16,13 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import static androidx.core.app.NotificationCompat.DEFAULT_ALL;
 
+import com.bkav.musicapplication.constant.Constant;
 import com.bkav.musicapplication.enumdefine.MediaStatus;
 import com.bkav.musicapplication.Playable;
 import com.bkav.musicapplication.R;
@@ -55,32 +55,33 @@ public class MediaPlaybackService extends Service implements Playable {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getExtras().getString(NotificationActionService.NOTIFICATION_ACTION_NAME);
             //Bkav Thanhnch: can check null.
-            switch (action) {
-                case ACTION_PREVIOUS:
-                    onMediaPrevious();
-                    break;
-                case ACTION_NEXT:
-                    onMediaNext();
-                    break;
-                case ACTION_PLAY:
-                    if (mMediaPlayer.isPlaying()) {
-                        onMediaPause();
-                    } else {
-                        onMediaPlay();
-                    }
-                    break;
-                default:    //Neu null hoac gia tri khac => log.d(action)
-                    Log.d(TAG, "NotificationBroadcast onReceive: " + action);
-                    break;
+            if(action != null) {
+                switch (action) {
+                    case ACTION_PREVIOUS:
+                        onMediaPrevious();
+                        break;
+                    case ACTION_NEXT:
+                        onMediaNext();
+                        break;
+                    case ACTION_PLAY:
+                        if (mMediaPlayer.isPlaying()) {
+                            onMediaPause();
+                        } else {
+                            onMediaPlay();
+                        }
+                        break;
+                    default:    //Neu null hoac gia tri khac => log.d(action)
+                        Log.d(TAG, "NotificationBroadcast onReceive: " + action);
+                        break;
+                }
             }
         }
     };
 
     private NotificationManager mNotificationManager;
-    //Thanhnch: dung hang so thich hop.
-    private int mMediaPosition = -1;
-    private int mCurrentMediaID = -1;
-
+    private int mMediaPosition = Constant.MEDIA_DEFAULT_POSITION;
+    private String mCurrentMediaTitle = Constant.MEDIA_DEFAULT_TITLE;
+    private Song mCurrentSong;
     private MediaStatus mMediaStatus = MediaStatus.NONE;
     private MediaPlayer mMediaPlayer;
     private ArrayList<Song> mListAllSong = SongProvider.getInstanceNotCreate().getmListSong();
@@ -112,8 +113,6 @@ public class MediaPlaybackService extends Service implements Playable {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //Bkav Thanhnch:  chuyen vao xml
-        Toast.makeText(this, "Destroy Service", Toast.LENGTH_SHORT).show();
         if (mMediaPlayer != null) {
             mMediaPlayer.release();
         }
@@ -139,6 +138,14 @@ public class MediaPlaybackService extends Service implements Playable {
     @Override
     public void onMediaNext() {
         nextMedia();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Song getCurrentSong() {
+        return mCurrentSong;
     }
 
     /**
@@ -242,7 +249,9 @@ public class MediaPlaybackService extends Service implements Playable {
      */
     public void playMedia(Song song) {
         //Save current song's id
-        setmCurrentMediaID(song.getmID());
+        setmCurrentMediaTitle(song.getmTitle());
+
+        this.mCurrentSong = song;
 
         //Save current song's positon
         setmMediaPosition(song);
@@ -265,9 +274,6 @@ public class MediaPlaybackService extends Service implements Playable {
                 }
             });
         } catch (IOException e) {
-            //Bkav Thanhnch: try catch can ghi ro noi dung
-            //ke ca trong TH day la logic bat buoc cua he thong
-
             /*IOException co the xay ra khi thuc hien
             * cau lenh setDataSource(path) do duong dan khong dung
             * Khi bat duoc IOException thi in ra loi trong Logcat.
@@ -415,16 +421,16 @@ public class MediaPlaybackService extends Service implements Playable {
      * Function to get current song's id
      * @return
      */
-    public int getmCurrentMediaID() {
-        return mCurrentMediaID;
+    public String getmCurrentMediaTitle() {
+        return mCurrentMediaTitle;
     }
 
     /**
      * Function to set current song's id
-     * @param mCurrentMediaID
+     * @param mCurrentMediaTitle
      */
-    public void setmCurrentMediaID(int mCurrentMediaID) {
-        this.mCurrentMediaID = mCurrentMediaID;
+    public void setmCurrentMediaTitle(String mCurrentMediaTitle) {
+        this.mCurrentMediaTitle = mCurrentMediaTitle;
     }
 
     /**

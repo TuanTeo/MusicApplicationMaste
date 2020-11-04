@@ -38,7 +38,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     private LayoutInflater mInflater;
     private MainActivity mainActivity;
 
-    private int mCurrentSongId = Constant.MEDIA_DEFAULT_ID;
+    private String mCurrentSongTitle = Constant.MEDIA_DEFAULT_TITLE;
     private int mLastItemPositionInt = Constant.MEDIA_DEFAULT_POSITION;  //Vi tri cua phan tu khi clicked
 
     public SongAdapter(ArrayList<Song> mListSongAdapter, MainActivity context) {
@@ -58,14 +58,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     public void onBindViewHolder(@NonNull SongViewHolder holder, int position) {
         //Bind view when back from defferent activity
         if (mainActivity.getmMediaService() != null) {
-            mLastItemPositionInt = mainActivity.getmMediaService().getmCurrentMediaID();
+            mCurrentSongTitle = mainActivity.getmMediaService().getmCurrentMediaTitle();
             //Set Name song
             holder.mSongNameItemTextView.setText(mListSongAdapter.get(position).getmTitle());
             holder.mTotalTimeSongItemTextView.setText(mListSongAdapter.get(position).getmDurationString());
 
             //Set font
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (mListSongAdapter.get(position).getmID() == mLastItemPositionInt) {
+                if (mListSongAdapter.get(position).getmTitle().equals(mCurrentSongTitle)) {
                     holder.mSongNameItemTextView.setTextAppearance(R.style.SongTheme_NameSongClickOverLay);
                 } else {
                     holder.mSongNameItemTextView.setTextAppearance(R.style.SongTheme_NameSongOverLay);
@@ -73,7 +73,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             }
 
             //Set Serial
-            if (mListSongAdapter.get(position).getmID() == mLastItemPositionInt) {
+            if (mListSongAdapter.get(position).getmTitle().equals(mCurrentSongTitle)) {
                 holder.mSerialSongNumberTextView.setVisibility(View.INVISIBLE);
                 holder.mPlayingSongImageLinearLayout.setVisibility(View.VISIBLE);
             } else {
@@ -90,7 +90,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
             //Set font
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (position == mLastItemPositionInt) {
+                if (mListSongAdapter.get(position).getmTitle().equals(mCurrentSongTitle)) {
                     holder.mSongNameItemTextView.setTextAppearance(R.style.SongTheme_NameSongClickOverLay);
                 } else {
                     holder.mSongNameItemTextView.setTextAppearance(R.style.SongTheme_NameSongOverLay);
@@ -98,7 +98,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             }
 
             //Set Serial
-            if (mListSongAdapter.get(position).getmID() == mLastItemPositionInt) {
+            if (mListSongAdapter.get(position).getmTitle().equals(mCurrentSongTitle)) {
                 holder.mSerialSongNumberTextView.setVisibility(View.INVISIBLE);
                 holder.mPlayingSongImageLinearLayout.setVisibility(View.VISIBLE);
             } else {
@@ -114,12 +114,22 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         return mListSongAdapter.size();
     }
 
+    /**
+     * Tuantqd
+     * Filter to search song with newList
+     * newList get from onQueryTextChange(String newText)
+     * @param newList
+     */
     public void setFilter(ArrayList<Song> newList) {
         mListSongAdapter = new ArrayList<>();
         mListSongAdapter.addAll(newList);
         notifyDataSetChanged();
     }
 
+    /**
+     * Tuantqd
+     * Holder item list view and setOnclick, update UI for this view
+     */
     public class SongViewHolder extends RecyclerView.ViewHolder
             implements RecyclerView.OnClickListener {
 
@@ -130,6 +140,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         private LinearLayout mPlayingSongImageLinearLayout;
 
         /**
+         * Tuantqd
          * Constructor of Song View Holder
          *
          * @param itemView
@@ -180,7 +191,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         public void onClick(View v) {
 
             mLastItemPositionInt = getAdapterPosition();
-//            mCurrentSongId = mListSongAdapter.get(mLastItemPositionInt).getmID();
+            mCurrentSongTitle = mListSongAdapter.get(mLastItemPositionInt).getmTitle();
 
             if (v.getResources().getConfiguration().orientation
                     != Configuration.ORIENTATION_LANDSCAPE) {
@@ -193,15 +204,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 //play Media
                 mainActivity.getmMediaService().playMedia(mListSongAdapter.get(mLastItemPositionInt));
 
-                //Add Current Song to Database
-//                addSongToDataBase(mainActivity.getmMediaService().getmMediaPosition());
-
                 //UpDate data on View
                 notifyDataSetChanged();
                 //Show small playing area
                 mainActivity.getmAllSongFragment().showSmallPlayingArea();
                 //Update UI in AllSongFragment
-                mainActivity.getmAllSongFragment().upDateSmallPlayingRelativeLayout();
+                mainActivity.getmAllSongFragment()
+                        .upDateSmallPlayingRelativeLayout();
 
                 if (mListSongAdapter.get(mLastItemPositionInt).isFavoriteSong()) {
                     addSongToDataBase(mLastItemPositionInt);
@@ -216,6 +225,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         }
 
         /**
+         * Tuantqd
          * Get Song data put to ContentValues
          *
          * @param position
@@ -238,6 +248,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         }
 
         /**
+         * Tuantqd
          * Add Song To DataBase
          *
          * @param position
@@ -253,6 +264,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         }
 
         /**
+         * Tuantqd
          * Delete this Song from Database
          *
          * @param position

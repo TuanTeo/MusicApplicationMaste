@@ -12,6 +12,10 @@ import com.bkav.musicapplication.object.Song;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Tuantqd
+ * Favorite Song Database to save Song is favorite
+ */
 public class DataBase extends SQLiteOpenHelper {
 
     // Database Version
@@ -35,21 +39,10 @@ public class DataBase extends SQLiteOpenHelper {
     public static final String COLUMN_ALBUM_ID = "Album_ID";
     public static final String COLUMN_ID = "_id";
 
-    //Item Position
-    private static final int PATH = 0;
-    private static final int TRACK = 1;
-    private static final int YEAR = 2;
-    private static final int DURATION = 3;
-    private static final int TITLE = 4;
-    private static final int ALBUM = 5;
-    private static final int ARTIST_ID = 6;
-    private static final int ARTIST = 7;
-    private static final int ALBUM_ID = 8;
-    private static final int _ID = 9;
-
     private ContentResolver mContentResolver;
 
     /**
+     * Tuantqd
      * Constructor
      * @param context
      */
@@ -80,6 +73,7 @@ public class DataBase extends SQLiteOpenHelper {
     }
 
     /**
+     * Tuantqd
      * Add a Song to List Favorite Song
      * @param song
      */
@@ -108,6 +102,7 @@ public class DataBase extends SQLiteOpenHelper {
     }
 
     /**
+     * Tuantqd
      * Get list All Favorite Song
      * @return
      */
@@ -122,21 +117,21 @@ public class DataBase extends SQLiteOpenHelper {
         //Looping through all rows and add to list
         if (cursor.moveToFirst()) {
             do {
-                //Get data from cursor
-                final String title = cursor.getString(PATH);
-                final int trackNumber = cursor.getInt(TRACK);
-                final int year = cursor.getInt(YEAR);
-                final int duration = cursor.getInt(TITLE);
-                final String uri = cursor.getString(DURATION);
-                final String albumName = cursor.getString(ALBUM);
-                final int artistId = cursor.getInt(ARTIST_ID);
-                final String artistName = cursor.getString(ARTIST);
-                final String albumID = cursor.getString(ALBUM_ID);
-                final int _id = cursor.getInt(_ID);
-
-                Song song = new Song(title, trackNumber, year, duration, uri,
-                        albumName, artistId, artistName, albumID, _id);
-                songList.add(song);
+//                //Get data from cursor
+//                final String title = cursor.getString(PATH);
+//                final int trackNumber = cursor.getInt(TRACK);
+//                final int year = cursor.getInt(YEAR);
+//                final int duration = cursor.getInt(TITLE);
+//                final String uri = cursor.getString(DURATION);
+//                final String albumName = cursor.getString(ALBUM);
+//                final int artistId = cursor.getInt(ARTIST_ID);
+//                final String artistName = cursor.getString(ARTIST);
+//                final String albumID = cursor.getString(ALBUM_ID);
+//                final int _id = cursor.getInt(_ID);
+//
+//                Song song = new Song(title, trackNumber, year, duration, uri,
+//                        albumName, artistId, artistName, albumID, _id);
+                songList.add(Song.getSong(cursor));
             } while (cursor.moveToNext());
         }
 
@@ -145,6 +140,7 @@ public class DataBase extends SQLiteOpenHelper {
     }
 
     /**
+     * Tuantqd
      * Delete a Song on ListSong
      * @param song
      */

@@ -13,7 +13,7 @@ import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
-import android.widget.Toast;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -26,6 +26,8 @@ import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.bkav.musicapplication.R;
 import com.bkav.musicapplication.contentprovider.SongProvider;
+import com.bkav.musicapplication.fragment.AllSongFragment;
+import com.bkav.musicapplication.fragment.FavoriteSongFragment;
 import com.bkav.musicapplication.service.MediaPlaybackService;
 import com.bkav.musicapplication.object.Song;
 import com.google.android.material.navigation.NavigationView;
@@ -35,10 +37,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 //    public static final String ALL_SONG_FRAGMENT_ID = "ALL_SONG_FRAGMENT_ID";
 
-    private int mIsRunning = 0;
-
     private AllSongFragment mAllSongFragment = new AllSongFragment();
-    private MediaPlaybackFragment mMediaPlaybackFragment = new MediaPlaybackFragment();
+//    private MediaPlaybackFragment mMediaPlaybackFragment = new MediaPlaybackFragment();
     private FavoriteSongFragment mFavoriteSongFragment = new FavoriteSongFragment();
     private MediaPlaybackService mMediaService;
     private DrawerLayout mDrawerLayout;
@@ -52,12 +52,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             MediaPlaybackService.BoundService bind = (MediaPlaybackService.BoundService) service;
             mMediaService = bind.getService(); //Get instance of service
             createMainView();
-            Toast.makeText(mMediaService, "onServiceConnected: MainActivity", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Toast.makeText(mMediaService, "Service DIsconnected", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -134,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     /**
+     * Tuantqd
      * Push item cua menu len toolbar
      *
      * @param menu
@@ -151,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 
     /**
+     * Tuantqd
      * Set event for item clicked
      *
      * @param item
@@ -161,9 +161,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         int itemID = item.getItemId();
         switch (itemID) {
             case R.id.seach_action_imagebutton:
-                /**
-                 * TODO xu ly tac vu tim kiem bai hat trong list bai hat
-                 */
+                /*Hanlder search action on onQueryTextChange*/
                 break;
             case android.R.id.home:
                 //When click to NavigationDrawer
@@ -174,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     /**
+     * Tuantqd
      * Create view on the First time
      */
     public void createMainView() {
@@ -186,17 +185,19 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
     }
 
-    /** Bkav Thanhnch: Khong dung thi bo di
+    /**
+     * Tuantqd
      * Show Detail Media Fragment
      */
-    public void showMediaFragment(int intRes) {
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(intRes, mMediaPlaybackFragment)
-                .commit();
-    }
+//    public void showMediaFragment(int intRes) {
+//
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(intRes, mMediaPlaybackFragment)
+//                .commit();
+//    }
 
     /**
+     * Tuantqd
      * Show All Song Fragment
      */
     public void showAllSongFragment(int intRes) {
@@ -226,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     /**
+     * Tuantqd
      * Check read storage permission granted
      *
      * @return
@@ -266,6 +268,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     /**
+     * Tuantqd
      * Show a dialog why this app requires READ_EXTERNAL_STORAGE permission
      */
     private void showInContextUI() {
@@ -275,13 +278,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         // 1. Instantiate an AlertDialog.Builder with its constructor
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        //Bkav Thanhnch: can chuyen vao xml
         // 2. Chain together various setter methods to set the dialog characteristics
-        builder.setMessage("App nghe nhac can quyen doc ghi the nho de hien thi danh sach bai hat")
+        builder.setMessage(R.string.read_storage_detail_dialog_message)
                 .setTitle(R.string.read_storage_permission_dialog_title_educational_UI);
-        //Bkav Thanhnch:  chuyen vao xml
         //3. Add button
-        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.ok_negative, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 mRequestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
             }
@@ -294,6 +295,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 
     /**
+     * Tuantqd
      * Register the permissions callback, which handles the user's response to the
      * system permissions dialog. Save the return value, an instance of
      * ActivityResultLauncher, as an instance variable.
@@ -333,11 +335,23 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         return mMediaService;
     }
 
+    /**
+     * Tuantqd
+     * Call when submit search text
+     * @param query
+     * @return
+     */
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
 
+    /**
+     * Tuantqd
+     * Call when change text to search
+     * @param newText
+     * @return
+     */
     @Override
     public boolean onQueryTextChange(String newText) {
         newText = newText.toLowerCase();

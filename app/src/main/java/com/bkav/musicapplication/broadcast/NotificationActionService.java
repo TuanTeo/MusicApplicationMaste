@@ -4,12 +4,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+/**
+ * Tuantqd
+ */
 public class NotificationActionService extends BroadcastReceiver {
 
     public static final String BROADCAST_ACTION = "Broadcast_action";
     public static final String NOTIFICATION_ACTION_NAME = "Notification_action_name";
 
     /**
+     * Tuantqd
      * Send broadcast with action get from notification
      * @param context
      * @param intent

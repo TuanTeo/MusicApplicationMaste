@@ -66,6 +66,7 @@ public class FavoriteSongProvider extends ContentProvider {
     }
 
     /**
+     * Tuantqd
      * Truy van du lieu trong DataBase
      * @param uri
      * @param projection
@@ -103,6 +104,7 @@ public class FavoriteSongProvider extends ContentProvider {
     }
 
     /**
+     * Tuantqd
      * Add data to DataBase
      * @param uri
      * @param values
@@ -114,10 +116,9 @@ public class FavoriteSongProvider extends ContentProvider {
 
         //Kiểm tra xem ID cua Song đã có trong Database chưa
         Cursor cursor = query(FavoriteSongProvider.CONTENT_URI,null,
-                "_id = ?", new String[]{values.getAsString(DataBase.COLUMN_ID)},
+                "PATH = ?", new String[]{values.getAsString(DataBase.COLUMN_PATH)},
                 null);
 
-        //Bkav Thanhnch: de lam gi vay?
         //Kiem tra trong cursor co phan tu nao khong
         if(cursor.moveToFirst()){   //Co phan tu ( da co trong database ) => khong them
             return null;
@@ -134,6 +135,7 @@ public class FavoriteSongProvider extends ContentProvider {
     }
 
     /**
+     * Tuantqd
      * Xoa du lieu tu DataBase
      * @param uri
      * @param selection
@@ -169,6 +171,7 @@ public class FavoriteSongProvider extends ContentProvider {
     }
 
     /**
+     * Tuantqd
      * Thay doi du lieu cua cac hang da co trong DataBase
      * @param uri           //Co so du lieu duoc truy van
      * @param values
